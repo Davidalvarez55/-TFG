@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "FCC"
+rootProject.name = "TFG"
 include ':app'
