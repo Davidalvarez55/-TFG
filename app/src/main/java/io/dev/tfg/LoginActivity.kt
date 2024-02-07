@@ -1,5 +1,6 @@
 package io.dev.tfg
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import io.dev.tfg.R
+import io.dev.tfg.ui.MaterialActivity
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +32,8 @@ class LoginActivity : AppCompatActivity() {
                     val passBd = documentSnaphot.getString("password")
                     if(passBd == pass){
                         welcomeMessage.text = "Bienvenido"
+                        val intent = Intent(this, MaterialActivity::class.java)
+                        startActivity(intent)
                     }
                     else{
                     }
