@@ -2,8 +2,12 @@ package io.dev.tfg
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
+import com.google.firebase.firestore.FirebaseFirestore
 import io.dev.tfg.R
 
 class LoginActivity : AppCompatActivity() {
@@ -13,9 +17,25 @@ class LoginActivity : AppCompatActivity() {
         val btn = findViewById<Button>(R.id.button)
         val user: EditText = findViewById(R.id.user)
         val pass: EditText = findViewById(R.id.password)
+        val db = FirebaseFirestore.getInstance()
+        val userRef = db.collection("Usuarios")
+        val welcomeMessage: TextView = findViewById(R.id.welcomeMessage)
+
         btn.setOnClickListener{
             val user: String = user.text.toString()
             val pass: String = pass.text.toString()
+            val userDocRef =  userRef.document(user)
+            userDocRef.get().addOnSuccessListener { documentSnaphot ->
+                if (documentSnaphot.exists()){
+                    val passBd = documentSnaphot.getString("password")
+                    if(passBd == pass){
+                        welcomeMessage.text = "Bienvenido"
+                    }
+                    else{
+                    }
+                }
+            }
+                .addOnFailureListener{}
         }
     }
 }
