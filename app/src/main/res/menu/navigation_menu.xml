@@ -14,7 +14,7 @@
         />
     <item
         android:id = "@+id/itemModifyFrag"
-        android:icon="@drawable/ic_user_frag"
+        android:icon="@drawable/ic_modify_frag"
         android:title="Modificar usuarios"
         />
 </menu>
