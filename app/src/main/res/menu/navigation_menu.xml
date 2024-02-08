@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id = "@+id/itemUserFrag"
+        android:icon="@drawable/ic_user_frag"
+        android:title="Registrar usuarios"
+        />
+    <item
+        android:id = "@+id/itemGraphicsFrag"
+        android:icon="@drawable/ic_graph_frag"
+        android:title="Graficos"
+        />
+    <item
+        android:id = "@+id/itemModifyFrag"
+        android:icon="@drawable/ic_user_frag"
+        android:title="Modificar usuarios"
+        />
+</menu>

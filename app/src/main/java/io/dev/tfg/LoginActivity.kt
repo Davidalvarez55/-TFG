@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import io.dev.tfg.R
+import io.dev.tfg.ui.AdminActivity
 import io.dev.tfg.ui.MaterialActivity
 
 class LoginActivity : AppCompatActivity() {
@@ -21,7 +22,6 @@ class LoginActivity : AppCompatActivity() {
         val pass: EditText = findViewById(R.id.password)
         val db = FirebaseFirestore.getInstance()
         val userRef = db.collection("Usuarios")
-        val welcomeMessage: TextView = findViewById(R.id.welcomeMessage)
 
         btn.setOnClickListener{
             val user: String = user.text.toString()
@@ -30,10 +30,18 @@ class LoginActivity : AppCompatActivity() {
             userDocRef.get().addOnSuccessListener { documentSnaphot ->
                 if (documentSnaphot.exists()){
                     val passBd = documentSnaphot.getString("password")
+                    val admin = documentSnaphot.getBoolean("Admin")
                     if(passBd == pass){
-                        welcomeMessage.text = "Bienvenido"
-                        val intent = Intent(this, MaterialActivity::class.java)
-                        startActivity(intent)
+                        if(admin == true)
+                        {
+                            val intent = Intent(this, AdminActivity::class.java)
+                            startActivity(intent)
+                        }
+                        else {
+                            val intent = Intent(this, MaterialActivity::class.java)
+                            startActivity(intent)
+
+                        }
                     }
                     else{
                     }
