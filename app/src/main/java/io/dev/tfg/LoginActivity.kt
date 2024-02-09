@@ -29,15 +29,25 @@ class LoginActivity : AppCompatActivity() {
                 if (documentSnaphot.exists()){
                     val passBd = documentSnaphot.getString("password")
                     val admin = documentSnaphot.getBoolean("Admin")
+                    val singing = documentSnaphot.getBoolean("fichado")
                     if(passBd == pass){
                         if(admin == true)
                         {
-                            registerTime(user)
+                            if(singing == true){
+                                registerLeavingTime(user)
+                            } else {
+                                registerEntryTime(user)
+                            }
+
                             val intent = Intent(this, AdminActivity::class.java)
                             startActivity(intent)
                         }
                         else {
-                            registerTime(user)
+                            if(singing == true){
+                                registerLeavingTime(user)
+                            } else {
+                                registerEntryTime(user)
+                            }
                             val intent = Intent(this, MaterialActivity::class.java)
                             startActivity(intent)
 
@@ -50,8 +60,8 @@ class LoginActivity : AppCompatActivity() {
                 .addOnFailureListener{}
         }
     }
-    private fun registerTime(user : String){
-        //val userDocRef =  userRef.document(user)
+    private fun registerEntryTime(user : String){
+        val userDocRef =  userRef.document(user)
         val singingColl = db.collection("fichajes")
 
         val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
@@ -60,5 +70,24 @@ class LoginActivity : AppCompatActivity() {
         val singingRef = singingColl.document(currentDate).collection("usuarios").document(user)
         val signTime = hashMapOf("fichaje_entrada" to currentTime)
         singingRef.set(signTime)
+        userDocRef.update("fichado",true)
+    }
+    private fun registerLeavingTime(user : String){
+        val userDocRef =  userRef.document(user)
+        val singingColl = db.collection("fichajes")
+
+        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
+
+        val singingRef = singingColl.document(currentDate).collection("usuarios").document(user)
+        singingRef.get()
+            .addOnSuccessListener { documentSnapshot ->
+                val existData = documentSnapshot.data
+                if(existData != null){
+                    existData["fichaje_salida"] = currentTime
+                    singingRef.set(existData)
+                }
+            }
+        userDocRef.update("fichado",false)
     }
 }
