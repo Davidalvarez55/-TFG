@@ -21,9 +21,18 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_below="@id/User"
-        android:layout_marginTop="90dp"
+        android:layout_marginTop="150dp"
         android:background="@color/buttonBackground"
         android:textColor="@color/white"
         android:text="Añadir Usuario" />
+
+    <TextView
+        android:id="@+id/confirmation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="80dp"
+        android:textSize="20sp"
+        android:text="" />
 
 </FrameLayout>
