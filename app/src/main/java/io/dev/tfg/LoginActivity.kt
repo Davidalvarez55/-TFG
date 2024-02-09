@@ -8,16 +8,18 @@ import android.widget.EditText
 import com.google.firebase.firestore.FirebaseFirestore
 import io.dev.tfg.ui.AdminActivity
 import io.dev.tfg.ui.MaterialActivity
+import java.text.SimpleDateFormat
+import java.util.*
 
 class LoginActivity : AppCompatActivity() {
+    val db = FirebaseFirestore.getInstance()
+    val userRef = db.collection("Usuarios")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         val btn = findViewById<Button>(R.id.button)
         val user: EditText = findViewById(R.id.user)
         val pass: EditText = findViewById(R.id.password)
-        val db = FirebaseFirestore.getInstance()
-        val userRef = db.collection("Usuarios")
 
         btn.setOnClickListener{
             val user: String = user.text.toString()
@@ -30,10 +32,12 @@ class LoginActivity : AppCompatActivity() {
                     if(passBd == pass){
                         if(admin == true)
                         {
+                            registerTime(user)
                             val intent = Intent(this, AdminActivity::class.java)
                             startActivity(intent)
                         }
                         else {
+                            registerTime(user)
                             val intent = Intent(this, MaterialActivity::class.java)
                             startActivity(intent)
 
@@ -45,5 +49,16 @@ class LoginActivity : AppCompatActivity() {
             }
                 .addOnFailureListener{}
         }
+    }
+    private fun registerTime(user : String){
+        //val userDocRef =  userRef.document(user)
+        val singingColl = db.collection("fichajes")
+
+        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
+
+        val singingRef = singingColl.document(currentDate).collection("usuarios").document(user)
+        val signTime = hashMapOf("fichaje_entrada" to currentTime)
+        singingRef.set(signTime)
     }
 }
