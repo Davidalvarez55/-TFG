@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue"
+    android:background="@color/colorPrimary"
     tools:context=".ui.AddUserFragment">
 
     <EditText
@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textColor="@color/white"
+        android:textColor="@color/textColorPrimary"
         android:textSize="25sp"
         android:hint="Nombre de usuario" />
 
@@ -22,7 +22,8 @@
         android:layout_gravity="center"
         android:layout_below="@id/User"
         android:layout_marginTop="90dp"
-
+        android:background="@color/buttonBackground"
+        android:textColor="@color/white"
         android:text="Añadir Usuario" />
 
 </FrameLayout>
