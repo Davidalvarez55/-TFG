@@ -44,7 +44,11 @@ class AddUserFragment : Fragment() {
         val password = createPassword()
 
         if(userName.isNotEmpty()){
-            val pass = hashMapOf("password" to password)
+            val pass = hashMapOf(
+                "password" to password,
+                "Admin" to false,
+                "fichado" to false
+            )
             db.collection("Usuarios").document(userName)
                 .set(pass)
                 .addOnSuccessListener { confirmation.setText("usuario añadido correctamente") }
