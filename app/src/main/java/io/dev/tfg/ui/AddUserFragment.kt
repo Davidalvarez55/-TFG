@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.TextView
 import com.google.firebase.firestore.FirebaseFirestore
 import io.dev.tfg.R
+import java.security.SecureRandom
 
 class AddUserFragment : Fragment() {
     private lateinit var user: EditText
@@ -40,7 +41,7 @@ class AddUserFragment : Fragment() {
 
     private fun addUserToFirebase(){
         val userName = user.text.toString()
-        val password = "1234567"
+        val password = createPassword()
 
         if(userName.isNotEmpty()){
             val pass = hashMapOf("password" to password)
@@ -51,5 +52,18 @@ class AddUserFragment : Fragment() {
         } else {
             user.error = "Nombre de usuario no puede estar vacio"
         }
+    }
+    private fun createPassword(): String{
+        val passLength = 6
+        val passChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+        val secureRandom =  SecureRandom()
+        val pass = StringBuilder(passLength)
+
+        repeat(passLength){
+            val random = secureRandom.nextInt(passChars.length)
+            pass.append(passChars[random])
+        }
+        return pass.toString()
     }
 }
