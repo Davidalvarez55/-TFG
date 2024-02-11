@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Switch
 import android.widget.TextView
 import com.google.firebase.firestore.FirebaseFirestore
 import io.dev.tfg.R
@@ -16,6 +17,7 @@ class AddUserFragment : Fragment() {
     private lateinit var user: EditText
     private lateinit var buttonUser: Button
     private lateinit var confirmation : TextView
+    private lateinit var admin: Switch
 
     private val db = FirebaseFirestore.getInstance()
 
@@ -31,6 +33,7 @@ class AddUserFragment : Fragment() {
         user = rootView.findViewById(R.id.User)
         buttonUser = rootView.findViewById(R.id.UserButton)
         confirmation = rootView.findViewById(R.id.confirmation)
+        admin = rootView.findViewById(R.id.adminSwitch)
 
         buttonUser.setOnClickListener{
             addUserToFirebase()
@@ -41,12 +44,13 @@ class AddUserFragment : Fragment() {
 
     private fun addUserToFirebase(){
         val userName = user.text.toString()
+        val switchAdmin: Boolean = admin.isChecked
         val password = createPassword()
 
         if(userName.isNotEmpty()){
             val pass = hashMapOf(
                 "password" to password,
-                "Admin" to false,
+                "Admin" to switchAdmin,
                 "fichado" to false
             )
             db.collection("Usuarios").document(userName)
