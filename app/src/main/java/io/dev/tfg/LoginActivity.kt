@@ -68,8 +68,18 @@ class LoginActivity : AppCompatActivity() {
         val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
 
         val singingRef = singingColl.document(currentDate).collection("usuarios").document(user)
-        val signTime = hashMapOf("fichaje_entrada" to currentTime)
-        singingRef.set(signTime)
+
+        singingRef.get()
+            .addOnSuccessListener { documentSnapshot ->
+                val existData = documentSnapshot.data
+                if(existData != null){
+                    existData["fichaje_entrada"] = currentTime
+                    singingRef.set(existData)
+                } else {
+                    val signTime = hashMapOf("fichaje_entrada" to currentTime)
+                    singingRef.set(signTime)
+                }
+            }
         userDocRef.update("fichado",true)
     }
     private fun registerLeavingTime(user : String){
