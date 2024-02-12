@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ListView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -18,6 +19,7 @@ class GraphicsFragment : Fragment() {
     private lateinit var list: ListView
     private lateinit var singingList: List<Singing>
     private lateinit var adapter: SinginAdapter
+    private lateinit var confirmation : Button
 
     private val db = FirebaseFirestore.getInstance()
     override fun onCreateView(
@@ -27,6 +29,7 @@ class GraphicsFragment : Fragment() {
         val rootView = inflater.inflate(R.layout.fragment_graphics, container, false)
 
         list = rootView.findViewById(R.id.listView)
+        confirmation = rootView.findViewById(R.id.confirmation)
 
         val todayDate =  SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
         val query : Query = db
@@ -47,7 +50,13 @@ class GraphicsFragment : Fragment() {
 
             }
             .addOnFailureListener {  }
-
+        confirmation.setOnClickListener{
+            val confirm = hashMapOf(
+                "confirmado" to true
+            )
+            db.collection("fichajes").document(todayDate)
+                .set(confirm)
+        }
         return rootView
     }
     private fun calculateDiff(singHour: String, leavingHour: String): String{
