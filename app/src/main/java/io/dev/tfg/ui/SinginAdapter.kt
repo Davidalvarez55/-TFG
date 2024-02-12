@@ -1,13 +1,17 @@
 package io.dev.tfg.ui
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import io.dev.tfg.R
 import io.dev.tfg.classes.Singing
+import java.text.SimpleDateFormat
+import java.util.*
 
 class SinginAdapter(private val context: Context, private val users: List<Singing>) : BaseAdapter(){
     override fun getCount(): Int {
@@ -41,6 +45,10 @@ class SinginAdapter(private val context: Context, private val users: List<Singin
         holder.leaveHour.text = user.leavingHour
         holder.totalHour.text = user.totalHour
 
+        if(!moreThan8Hour(user.totalHour))
+        {
+            holder.totalHour.setTextColor(Color.RED)
+        }
         return view
     }
     private class ViewHolder(view: View) {
@@ -50,4 +58,20 @@ class SinginAdapter(private val context: Context, private val users: List<Singin
         val totalHour: TextView = view.findViewById(R.id.totalHour)
     }
 
+    private fun moreThan8Hour(totalHour : String): Boolean{
+    try{
+        val time = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val totalHourTime = time.parse(totalHour)
+        val calendar = Calendar.getInstance()
+        calendar.time = totalHourTime
+        val hours = calendar.get(Calendar.HOUR_OF_DAY)
+        val mins = calendar.get(Calendar.MINUTE)
+
+        val totalMins = hours * 60 + mins
+        return (totalMins > (8*60))
+    } catch(e: Exception){
+        e.printStackTrace()
+        return false
+    }
+    }
 }

@@ -56,6 +56,7 @@ class GraphicsFragment : Fragment() {
             )
             db.collection("fichajes").document(todayDate)
                 .set(confirm)
+            it.isEnabled = false
         }
         return rootView
     }
