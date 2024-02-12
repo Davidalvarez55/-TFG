@@ -5,56 +5,65 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ListView
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import io.dev.tfg.R
+import io.dev.tfg.classes.Singing
+import java.text.SimpleDateFormat
+import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [GraphicsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class GraphicsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var list: ListView
+    private lateinit var singingList: List<Singing>
+    private lateinit var adapter: SinginAdapter
 
+    private val db = FirebaseFirestore.getInstance()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_graphics, container, false)
-    }
+        val rootView = inflater.inflate(R.layout.fragment_graphics, container, false)
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment GraphicsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            GraphicsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+        list = rootView.findViewById(R.id.listView)
+
+        val todayDate =  SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        val query : Query = db
+            .collection("fichajes")
+            .document(todayDate)
+            .collection("usuarios")
+        query.get()
+            .addOnSuccessListener { documents ->
+                singingList = documents.map {document->
+                    val user = document.id
+                    val singHour = document.getString("fichaje_entrada") ?: ""
+                    val leavingHour = document.getString("fichaje_salida") ?: ""
+                    val totalTime = calculateDiff(singHour,leavingHour)
+                    Singing(user,singHour,leavingHour,totalTime)
                 }
+                adapter = SinginAdapter(requireContext(), singingList)
+                list.adapter = adapter
+
             }
+            .addOnFailureListener {  }
+
+        return rootView
+    }
+    private fun calculateDiff(singHour: String, leavingHour: String): String{
+        try {
+            val diff = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+            val singHour = diff.parse(singHour)
+            val leaveHour = diff.parse(leavingHour)
+            val diffTime = leaveHour.time - singHour.time
+            val hour = diffTime / (60 * 60 * 1000)
+            val minutes = (diffTime % (60 * 60 * 1000)) / (60 * 1000)
+
+            return String.format(Locale.getDefault(), "%02d:%02d", hour, minutes)
+        }catch(e: Exception){
+            e.printStackTrace()
+            return ""
+        }
     }
 }

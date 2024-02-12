@@ -11,6 +11,7 @@ import android.widget.Switch
 import android.widget.TextView
 import com.google.firebase.firestore.FirebaseFirestore
 import io.dev.tfg.R
+import io.dev.tfg.classes.Singing
 import java.security.SecureRandom
 
 class AddUserFragment : Fragment() {
@@ -27,7 +28,6 @@ class AddUserFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val rootView = inflater.inflate(R.layout.fragment_add_user, container, false)
 
         user = rootView.findViewById(R.id.User)
