@@ -17,7 +17,8 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        val btn = findViewById<Button>(R.id.button)
+        val btn = findViewById<Button>(R.id.entry)
+        val btn2 = findViewById<Button>(R.id.leave)
         val user: EditText = findViewById(R.id.user)
         val pass: EditText = findViewById(R.id.password)
 
@@ -33,21 +34,40 @@ class LoginActivity : AppCompatActivity() {
                     if(passBd == pass){
                         if(admin == true)
                         {
-                            if(singing == true){
-                                registerLeavingTime(user)
-                            } else {
-                                registerEntryTime(user)
-                            }
-
+                            registerEntryTime(user)
                             val intent = Intent(this, AdminActivity::class.java)
                             startActivity(intent)
                         }
                         else {
-                            if(singing == true){
-                                registerLeavingTime(user)
-                            } else {
-                                registerEntryTime(user)
-                            }
+                            registerEntryTime(user)
+                            val intent = Intent(this, MaterialActivity::class.java)
+                            startActivity(intent)
+                        }
+                    }
+                    else{
+                    }
+                }
+            }
+                .addOnFailureListener{}
+        }
+        btn2.setOnClickListener{
+            val user: String = user.text.toString()
+            val pass: String = pass.text.toString()
+            val userDocRef =  userRef.document(user)
+            userDocRef.get().addOnSuccessListener { documentSnaphot ->
+                if (documentSnaphot.exists()){
+                    val passBd = documentSnaphot.getString("password")
+                    val admin = documentSnaphot.getBoolean("Admin")
+                    val singing = documentSnaphot.getBoolean("fichado")
+                    if(passBd == pass){
+                        if(admin == true)
+                        {
+                            registerLeavingTime(user)
+                            val intent = Intent(this, AdminActivity::class.java)
+                            startActivity(intent)
+                        }
+                        else {
+                            registerLeavingTime(user)
                             val intent = Intent(this, MaterialActivity::class.java)
                             startActivity(intent)
 
