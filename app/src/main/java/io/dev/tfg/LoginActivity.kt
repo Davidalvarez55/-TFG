@@ -55,7 +55,6 @@ class LoginActivity : AppCompatActivity() {
                         }
                     }
                 } else {
-                    // Tratar caso donde el documento no existe
                 }
             }
         }
