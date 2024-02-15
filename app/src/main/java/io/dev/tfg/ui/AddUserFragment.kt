@@ -56,6 +56,7 @@ class AddUserFragment : Fragment() {
 
         buttonUser.setOnClickListener{
             addUserToFirebase()
+            clearAll()
         }
 
         return rootView
@@ -63,13 +64,16 @@ class AddUserFragment : Fragment() {
 
     private fun addUserToFirebase(){
         val userName = user.text.toString()
+        val sur = surname.text.toString()
+        val sur2 = surname2.text.toString()
+        val id = id.text.toString()
         val switchAdmin: Boolean = admin.isChecked
         val password = createPassword()
 
         if(userName.isNotEmpty()){
             val pass = hashMapOf(
-                "Primer Apellido" to surname,
-                "Segundo Apellido" to surname2,
+                "Primer Apellido" to sur,
+                "Segundo Apellido" to sur2,
                 "Dni" to id,
                 "password" to password,
                 "Admin" to switchAdmin,
@@ -96,5 +100,13 @@ class AddUserFragment : Fragment() {
             pass.append(passChars[random])
         }
         return pass.toString()
+    }
+
+    private fun clearAll() {
+        user.text.clear()
+        surname.text.clear()
+        surname2.text.clear()
+        id.text.clear()
+        admin.isChecked = false
     }
 }
