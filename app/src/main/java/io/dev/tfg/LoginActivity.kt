@@ -5,10 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
 import io.dev.tfg.ui.AdminActivity
 import io.dev.tfg.ui.MaterialActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -24,66 +28,62 @@ class LoginActivity : AppCompatActivity() {
         val user: EditText = findViewById(R.id.user)
         val pass: EditText = findViewById(R.id.password)
 
-        btn.setOnClickListener{
+        btn.setOnClickListener {
             val user: String = user.text.toString()
             val pass: String = pass.text.toString()
-            val userDocRef =  userRef.document(user)
-            userDocRef.get().addOnSuccessListener { documentSnaphot ->
-                if (documentSnaphot.exists()){
-                    val passBd = documentSnaphot.getString("password")
-                    val admin = documentSnaphot.getBoolean("Admin")
-                    if(passBd == pass){
-                        if(admin == true)
-                        {
+            val userDocRef = userRef.document(user)
+            userDocRef.get().addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val passBd = documentSnapshot.getString("password")
+                    val admin = documentSnapshot.getBoolean("Admin")
+                    if (passBd == pass) {
+                        if (admin == true) {
                             registerEntryTime(user)
                             val intent = Intent(this, AdminActivity::class.java)
                             startActivity(intent)
+                        } else {
+                            lifecycleScope.launch {
+                                if (entryTime(user)) {
+                                    registerEntryTime(user)
+                                    val intent =
+                                        Intent(this@LoginActivity, MaterialActivity::class.java)
+                                    startActivity(intent)
+                                } else {
+                                    println("La diferencia de tiempo no está en el rango permitido")
+                                }
+                            }
                         }
-                        else {
-                            if (entryTime(user)){
-                                registerEntryTime(user)
+                    }
+                } else {
+                    // Tratar caso donde el documento no existe
+                }
+            }
+        }
+            btn2.setOnClickListener {
+                val user: String = user.text.toString()
+                val pass: String = pass.text.toString()
+                val userDocRef = userRef.document(user)
+                userDocRef.get().addOnSuccessListener { documentSnaphot ->
+                    if (documentSnaphot.exists()) {
+                        val passBd = documentSnaphot.getString("password")
+                        val admin = documentSnaphot.getBoolean("Admin")
+                        if (passBd == pass) {
+                            if (admin == true) {
+                                registerLeavingTime(user)
+                                val intent = Intent(this, AdminActivity::class.java)
+                                startActivity(intent)
+                            } else {
+                                registerLeavingTime(user)
                                 val intent = Intent(this, MaterialActivity::class.java)
                                 startActivity(intent)
-                                }else {
-                                println("La diferencia de tiempo no está en el rango permitido")
-                            }
-                            }
 
+                            }
+                        } else {
                         }
-                    }
-                else{
-                }
-            }
-            .addOnFailureListener{}
-        }
-        btn2.setOnClickListener{
-            val user: String = user.text.toString()
-            val pass: String = pass.text.toString()
-            val userDocRef =  userRef.document(user)
-            userDocRef.get().addOnSuccessListener { documentSnaphot ->
-                if (documentSnaphot.exists()){
-                    val passBd = documentSnaphot.getString("password")
-                    val admin = documentSnaphot.getBoolean("Admin")
-                    if(passBd == pass){
-                        if(admin == true)
-                        {
-                            registerLeavingTime(user)
-                            val intent = Intent(this, AdminActivity::class.java)
-                            startActivity(intent)
-                        }
-                        else {
-                            registerLeavingTime(user)
-                            val intent = Intent(this, MaterialActivity::class.java)
-                            startActivity(intent)
-
-                        }
-                    }
-                    else{
                     }
                 }
+                    .addOnFailureListener {}
             }
-                .addOnFailureListener{}
-        }
     }
     private fun registerEntryTime(user : String){
         val userDocRef =  userRef.document(user)
@@ -125,14 +125,13 @@ class LoginActivity : AppCompatActivity() {
             }
         userDocRef.update("fichado",false)
     }
-    private fun entryTime(user : String) : Boolean{
+    private suspend fun entryTime(user : String) : Boolean= withContext(Dispatchers.IO){
         val userDocRef =  userRef.document(user)
         try{
             val documentSnapshot = Tasks.await(userDocRef.get())
             if (documentSnapshot.exists()) {
-                //val storedTime = documentSnapshot.getString("hora_entrada")
-                val storedTime = "19:30"
-                val currentTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+                val storedTime = documentSnapshot.getString("hora_entrada")
+                val currentTime = SimpleDateFormat("HH:mm", Locale("es","ES")).format(Date())
 
                 val parsedStoreTime =
                     SimpleDateFormat("HH:mm", Locale.getDefault()).parse(storedTime)
@@ -141,11 +140,15 @@ class LoginActivity : AppCompatActivity() {
 
                 val diff = parsedStoreTime.time - parsedCurrentTime.time
                 val diffInMins = TimeUnit.MILLISECONDS.toMinutes(diff)
-
-                return (diffInMins in -10..10)
+                println(storedTime)
+                println(currentTime)
+                println(diffInMins)
+                return@withContext (diffInMins in -10..10)
             }
+            println("nose que pasa")
     } catch (e: Exception){
+            println("excepcion no se que pasa $e")
         }
-        return false
+        return@withContext false
     }
 }
