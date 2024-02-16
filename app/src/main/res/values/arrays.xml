@@ -6,4 +6,10 @@
         <item>17:00</item>
         <item>18:00</item>
     </string-array>
+    <string-array name="notes">
+        <item></item>
+        <item>Error de fichaje</item>
+        <item>Medico</item>
+        <item>Fichaje de salida no realizado</item>
+    </string-array>
 </resources>

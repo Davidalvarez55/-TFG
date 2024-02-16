@@ -44,6 +44,7 @@ class SinginAdapter(private val context: Context, private val users: List<Singin
         holder.singHour.text = user.singHour
         holder.leaveHour.text = user.leavingHour
         holder.totalHour.text = user.totalHour
+        holder.note.text = user.note
 
         if(!moreThan8Hour(user.totalHour))
         {
@@ -56,6 +57,7 @@ class SinginAdapter(private val context: Context, private val users: List<Singin
         val singHour: TextView = view.findViewById(R.id.singingHour)
         val leaveHour: TextView = view.findViewById(R.id.leavingHour)
         val totalHour: TextView = view.findViewById(R.id.totalHour)
+        val note: TextView = view.findViewById(R.id.note)
     }
 
     private fun moreThan8Hour(totalHour : String): Boolean{
@@ -68,7 +70,7 @@ class SinginAdapter(private val context: Context, private val users: List<Singin
         val mins = calendar.get(Calendar.MINUTE)
 
         val totalMins = hours * 60 + mins
-        return (totalMins > (8*60))
+        return (totalMins >= (8*60))
     } catch(e: Exception){
         e.printStackTrace()
         return false

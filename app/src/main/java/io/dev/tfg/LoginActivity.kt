@@ -49,7 +49,6 @@ class LoginActivity : AppCompatActivity() {
                                         Intent(this@LoginActivity, MaterialActivity::class.java)
                                     startActivity(intent)
                                 } else {
-                                    println("La diferencia de tiempo no está en el rango permitido")
                                 }
                             }
                         }

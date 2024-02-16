@@ -42,8 +42,9 @@ class GraphicsFragment : Fragment() {
                     val user = document.id
                     val singHour = document.getString("fichaje_entrada") ?: ""
                     val leavingHour = document.getString("fichaje_salida") ?: ""
+                    val note = document.getString("nota") ?: ""
                     val totalTime = calculateDiff(singHour,leavingHour)
-                    Singing(user,singHour,leavingHour,totalTime)
+                    Singing(user,singHour,leavingHour,totalTime,note)
                 }
                 adapter = SinginAdapter(requireContext(), singingList)
                 list.adapter = adapter
@@ -51,12 +52,17 @@ class GraphicsFragment : Fragment() {
             }
             .addOnFailureListener {  }
         confirmation.setOnClickListener{
-            val confirm = hashMapOf(
-                "confirmado" to true
-            )
-            db.collection("fichajes").document(todayDate)
-                .set(confirm)
-            it.isEnabled = false
+            val valid = singingList.all{it.totalHour != "" && it.note.isNotEmpty()}
+            if(valid) {
+                val confirm = hashMapOf(
+                    "confirmado" to true
+                )
+                db.collection("fichajes").document(todayDate)
+                    .set(confirm)
+                it.isEnabled = false
+            } else{
+
+            }
         }
         return rootView
     }
