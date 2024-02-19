@@ -12,6 +12,8 @@
         android:theme="@style/Theme.TFG"
         tools:targetApi="31">
         <activity
+            android:name=".ui.OfficeActivity" />
+        <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>

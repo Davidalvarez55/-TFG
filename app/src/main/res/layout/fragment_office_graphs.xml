@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <AutoCompleteTextView
+        android:id="@+id/startDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Seleccionar fecha inicio"
+        android:inputType="none"
+        android:focusable="false"
+        android:layout_margin="15dp"
+        />
+    <AutoCompleteTextView
+        android:id="@+id/endDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Seleccionar fecha fin"
+        android:inputType="none"
+        android:focusable="false"
+        android:layout_margin="15dp"/>
+    <Button
+        android:id="@+id/search"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Buscar"
+        android:layout_gravity="top|center"
+        />
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="100dp"
+        />
+
+</LinearLayout>

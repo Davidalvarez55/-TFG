@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
 import io.dev.tfg.ui.AdminActivity
 import io.dev.tfg.ui.MaterialActivity
+import io.dev.tfg.ui.OfficeActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -39,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
                     if (passBd == pass) {
                         if (admin == true) {
                             registerEntryTime(user)
-                            val intent = Intent(this, AdminActivity::class.java)
+                            val intent = Intent(this, OfficeActivity::class.java)
                             startActivity(intent)
                         } else {
                             lifecycleScope.launch {
