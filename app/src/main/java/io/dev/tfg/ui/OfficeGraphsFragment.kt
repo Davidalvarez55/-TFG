@@ -40,6 +40,8 @@ class OfficeGraphsFragment : Fragment() {
         search.setOnClickListener{
             val start = startDate.text.toString()
             val end = endDate.text.toString()
+            println(start)
+            println(end)
             val singingList = mutableListOf<Singing>()
             val query : Query = db
                 .collection("fichajes")
@@ -47,6 +49,7 @@ class OfficeGraphsFragment : Fragment() {
                 .whereLessThanOrEqualTo(FieldPath.documentId(),end)
             query.get().addOnSuccessListener { documents ->
                 for (document in documents) {
+
                     val query2 : Query = db
                         .collection("fichajes")
                         .document(document.id)
@@ -55,6 +58,7 @@ class OfficeGraphsFragment : Fragment() {
                     query2.get().addOnSuccessListener { user ->
                         val singingListDoc = user.map { userDoc ->
                             val user = userDoc.id
+                            println(user)
                             val singHour = userDoc.getString("fichaje_entrada") ?: ""
                             val leavingHour = userDoc.getString("fichaje_salida") ?: ""
                             val note = userDoc.getString("nota") ?: ""
@@ -63,11 +67,12 @@ class OfficeGraphsFragment : Fragment() {
 
                         }
                         singingList.addAll(singingListDoc)
+
+                        adapter = SinginAdapter(requireContext(),singingList)
+                        list.adapter = adapter
                     }
                 }
             }
-            adapter = SinginAdapter(requireContext(),singingList)
-            list.adapter = adapter
         }
 
 
