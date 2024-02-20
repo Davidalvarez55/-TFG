@@ -30,13 +30,13 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         val btn = findViewById<Button>(R.id.entry)
         val btn2 = findViewById<Button>(R.id.leave)
-        val user: EditText = findViewById(R.id.user)
+        val id: EditText = findViewById(R.id.id)
         val pass: EditText = findViewById(R.id.password)
 
         btn.setOnClickListener {
-            val user: String = user.text.toString()
+            val id: String = id.text.toString()
             val pass: String = pass.text.toString()
-            val userDocRef = userRef.document(user)
+            val userDocRef = userRef.document(id)
             userDocRef.get().addOnSuccessListener { documentSnapshot ->
                 if (documentSnapshot.exists()) {
                     val passBd = documentSnapshot.getString("password")
@@ -44,18 +44,18 @@ class LoginActivity : AppCompatActivity() {
                     val office = documentSnapshot.getBoolean("Oficina")
                     if (passBd == pass) {
                         if (admin == true) {
-                            registerEntryTime(user)
+                            registerEntryTime(id)
                             val intent = Intent(this, AdminActivity::class.java)
                             startActivity(intent)
                         }else if(office == true){
-                            registerEntryTime(user)
+                            registerEntryTime(id)
                             val intent = Intent(this, OfficeActivity::class.java)
                             startActivity(intent)
                         }
                         else {
                             lifecycleScope.launch {
-                                if (entryTime(user)) {
-                                    registerEntryTime(user)
+                                if (entryTime(id)) {
+                                    registerEntryTime(id)
                                     val intent =
                                         Intent(this@LoginActivity, MaterialActivity::class.java)
                                     startActivity(intent)
@@ -69,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
             }
         }
             btn2.setOnClickListener {
-                val user: String = user.text.toString()
+                val user: String = id.text.toString()
                 val pass: String = pass.text.toString()
                 val userDocRef = userRef.document(user)
                 userDocRef.get().addOnSuccessListener { documentSnaphot ->

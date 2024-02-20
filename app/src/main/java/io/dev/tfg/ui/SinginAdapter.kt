@@ -29,7 +29,6 @@ class SinginAdapter(private val context: Context, private val users: List<Singin
     override fun getView(p: Int, covertView: View?, parent: ViewGroup?): View {
         val view : View
         val holder: ViewHolder
-        //primer elemento
         if(covertView == null){
             view = LayoutInflater.from(context).inflate(R.layout.list_singing_item,parent,false)
             holder = ViewHolder(view)

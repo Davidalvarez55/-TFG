@@ -75,19 +75,21 @@ class AddUserFragment : Fragment() {
     }
 
     private fun addUserToFirebase(){
-        val userName = user.text.toString()
+        val user = user.text.toString()
         val sur = surname.text.toString()
         val sur2 = surname2.text.toString()
         val id = id.text.toString()
         val switchAdmin: Boolean = admin.isChecked
         val switchOffice: Boolean = office.isChecked
         val password = createPassword()
+        val userName = documentIdentificator(user,sur,sur2)
 
         if(userName.isNotEmpty()){
             val pass = hashMapOf(
                 "Primer Apellido" to sur,
                 "Segundo Apellido" to sur2,
-                "Dni" to id,
+                "Nombre" to user,
+                "DNI" to id,
                 "password" to password,
                 "Admin" to switchAdmin,
                 "Oficina" to switchOffice,
@@ -99,8 +101,14 @@ class AddUserFragment : Fragment() {
                 .addOnSuccessListener { confirmation.setText("usuario añadido correctamente") }
                 .addOnFailureListener { confirmation.setText("usuario no añadido correctamente") }
         } else {
-            user.error = "Nombre de usuario no puede estar vacio"
         }
+    }
+
+    private fun documentIdentificator(name : String,surname : String, surname2 : String) : String{
+        val namet2 = name.take(2).toLowerCase()
+        val surnamet2 = surname.take(2).toLowerCase()
+        val surnamet22 = surname2.take(2).toLowerCase()
+        return "$namet2$surnamet2$surnamet22"
     }
     private fun createPassword(): String{
         val passLength = 6
