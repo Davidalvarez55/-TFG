@@ -17,7 +17,7 @@
         android:id ="@+id/navMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/navigation_menu"
+        app:menu="@menu/navigation_menu_admin"
         android:layout_gravity="bottom"
         android:background="@color/green"
         app:itemIconTint="@color/black"

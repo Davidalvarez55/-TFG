@@ -20,6 +20,7 @@ class AddUserFragment : Fragment() {
     private lateinit var buttonUser: Button
     private lateinit var confirmation : TextView
     private lateinit var admin: Switch
+    private lateinit var office: Switch
     private lateinit var hours: Spinner
     private lateinit var hour : String
 
@@ -40,6 +41,7 @@ class AddUserFragment : Fragment() {
         buttonUser = rootView.findViewById(R.id.UserButton)
         confirmation = rootView.findViewById(R.id.confirmation)
         admin = rootView.findViewById(R.id.adminSwitch)
+        office = rootView.findViewById(R.id.officeSwitch)
         hours = rootView.findViewById(R.id.spinner)
         val options = resources.getStringArray(R.array.hours)
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, options)
@@ -51,6 +53,16 @@ class AddUserFragment : Fragment() {
                 hour = options[position]
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
+            }
+        }
+        admin.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                office.isChecked = false
+            }
+        }
+        office.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                admin.isChecked = false
             }
         }
 
@@ -68,6 +80,7 @@ class AddUserFragment : Fragment() {
         val sur2 = surname2.text.toString()
         val id = id.text.toString()
         val switchAdmin: Boolean = admin.isChecked
+        val switchOffice: Boolean = office.isChecked
         val password = createPassword()
 
         if(userName.isNotEmpty()){
@@ -77,6 +90,7 @@ class AddUserFragment : Fragment() {
                 "Dni" to id,
                 "password" to password,
                 "Admin" to switchAdmin,
+                "Oficina" to switchOffice,
                 "fichado" to false,
                 "hora_entrada" to hour
             )

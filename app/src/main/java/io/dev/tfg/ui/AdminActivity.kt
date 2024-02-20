@@ -12,14 +12,6 @@ class AdminActivity : AppCompatActivity() {
 
     private val onNavMenu = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when(item.itemId){
-            R.id.itemUserFrag -> {
-                supportFragmentManager.commit {
-                    replace<AddUserFragment>(R.id.frameContainer)
-                    setReorderingAllowed(true)
-                    addToBackStack("replacement")
-                }
-                return@OnNavigationItemSelectedListener true
-            }
             R.id.itemGraphicsFrag -> {
                 supportFragmentManager.commit {
                     replace<GraphicsFragment>(R.id.frameContainer)
@@ -46,7 +38,7 @@ class AdminActivity : AppCompatActivity() {
         navigation = findViewById(R.id.navMenu)
         navigation.setOnNavigationItemSelectedListener(onNavMenu)
         supportFragmentManager.commit{
-            replace<AddUserFragment>(R.id.frameContainer)
+            replace<GraphicsFragment>(R.id.frameContainer)
             setReorderingAllowed(true)
             addToBackStack("replacement")
         }

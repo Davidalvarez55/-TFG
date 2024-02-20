@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
@@ -16,7 +17,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
+import android.widget.*
 import java.util.concurrent.TimeUnit
+import android.content.Context
+import androidx.core.content.ContentProviderCompat.requireContext
 
 class LoginActivity : AppCompatActivity() {
     val db = FirebaseFirestore.getInstance()
@@ -37,12 +41,18 @@ class LoginActivity : AppCompatActivity() {
                 if (documentSnapshot.exists()) {
                     val passBd = documentSnapshot.getString("password")
                     val admin = documentSnapshot.getBoolean("Admin")
+                    val office = documentSnapshot.getBoolean("Oficina")
                     if (passBd == pass) {
                         if (admin == true) {
                             registerEntryTime(user)
+                            val intent = Intent(this, AdminActivity::class.java)
+                            startActivity(intent)
+                        }else if(office == true){
+                            registerEntryTime(user)
                             val intent = Intent(this, OfficeActivity::class.java)
                             startActivity(intent)
-                        } else {
+                        }
+                        else {
                             lifecycleScope.launch {
                                 if (entryTime(user)) {
                                     registerEntryTime(user)
@@ -66,16 +76,18 @@ class LoginActivity : AppCompatActivity() {
                     if (documentSnaphot.exists()) {
                         val passBd = documentSnaphot.getString("password")
                         val admin = documentSnaphot.getBoolean("Admin")
+                        val office = documentSnaphot.getBoolean("Oficina")
                         if (passBd == pass) {
-                            if (admin == true) {
+                            if (admin == true || office == true) {
                                 registerLeavingTime(user)
-                                val intent = Intent(this, AdminActivity::class.java)
+                                Toast.makeText(this, "Salida registrada correctamente", Toast.LENGTH_SHORT).show()
+                                val intent = Intent(this, LoginActivity::class.java)
                                 startActivity(intent)
                             } else {
                                 registerLeavingTime(user)
+                                Toast.makeText(this, "Salida registrada correctamente", Toast.LENGTH_SHORT).show()
                                 val intent = Intent(this, MaterialActivity::class.java)
                                 startActivity(intent)
-
                             }
                         } else {
                         }

@@ -40,8 +40,6 @@ class OfficeGraphsFragment : Fragment() {
         search.setOnClickListener{
             val start = startDate.text.toString()
             val end = endDate.text.toString()
-            println(start)
-            println(end)
             val singingList = mutableListOf<Singing>()
             val query : Query = db
                 .collection("fichajes")
@@ -58,7 +56,6 @@ class OfficeGraphsFragment : Fragment() {
                     query2.get().addOnSuccessListener { user ->
                         val singingListDoc = user.map { userDoc ->
                             val user = userDoc.id
-                            println(user)
                             val singHour = userDoc.getString("fichaje_entrada") ?: ""
                             val leavingHour = userDoc.getString("fichaje_salida") ?: ""
                             val note = userDoc.getString("nota") ?: ""
