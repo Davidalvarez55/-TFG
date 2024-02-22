@@ -49,6 +49,12 @@ class SinginAdapter(private val context: Context, private val users: List<Singin
         {
             holder.totalHour.setTextColor(Color.RED)
         }
+        else if(!lessThan8_30hour(user.totalHour)){
+            holder.totalHour.setTextColor(Color.BLUE)
+        }
+        else{
+            holder.totalHour.setTextColor(Color.GREEN)
+        }
         return view
     }
     private class ViewHolder(view: View) {
@@ -74,5 +80,21 @@ class SinginAdapter(private val context: Context, private val users: List<Singin
         e.printStackTrace()
         return false
     }
+    }
+    private fun lessThan8_30hour(totalHour : String): Boolean{
+        try{
+            val time = SimpleDateFormat("HH:mm", Locale.getDefault())
+            val totalHourTime = time.parse(totalHour)
+            val calendar = Calendar.getInstance()
+            calendar.time = totalHourTime
+            val hours = calendar.get(Calendar.HOUR_OF_DAY)
+            val mins = calendar.get(Calendar.MINUTE)
+
+            val totalMins = hours * 60 + mins
+            return (totalMins <= (8*60+30))
+        } catch(e: Exception){
+            e.printStackTrace()
+            return false
+        }
     }
 }

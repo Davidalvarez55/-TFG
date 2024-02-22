@@ -1,5 +1,6 @@
 package io.dev.tfg.ui
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -52,7 +53,7 @@ class GraphicsFragment : Fragment() {
             }
             .addOnFailureListener {  }
         confirmation.setOnClickListener{
-            val valid = singingList.all{it.totalHour != "" && it.note.isNotEmpty()}
+            val valid = singingList.all{(it.totalHour != "" && it.note.isNotEmpty()) || (isGreen(it.totalHour))}
             if(valid) {
                 val confirm = hashMapOf(
                     "confirmado" to true
@@ -81,5 +82,16 @@ class GraphicsFragment : Fragment() {
             e.printStackTrace()
             return ""
         }
+    }
+    private fun isGreen(totalHour: String):Boolean{
+        val time = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val totalHourTime = time.parse(totalHour)
+        val calendar = Calendar.getInstance()
+        calendar.time = totalHourTime
+        val hours = calendar.get(Calendar.HOUR_OF_DAY)
+        val mins = calendar.get(Calendar.MINUTE)
+
+        val totalMins = hours * 60 + mins
+        return ((totalMins >= (8*60))&&totalMins <= (8*60+30))
     }
 }
